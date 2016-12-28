@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>备忘录完成二项式公式计算</title>
+    <style media="screen">
+      .main{
+        margin: 0 auto;
+        width: 1500px;
+      }
+      .left{
+        float: left;
+        width: 580px;
+        height: 400px;
+        /*border: 1px solid;*/
+        border-right: 1px solid;
+        margin-right: 30px;
+      }
+      .center{
+        float: left;
+        height: 350px;
+        /*border: 1px solid;*/
+        border-right: 1px solid;
+        padding: 50px 50px 0 50px;
+      }
+      .right{
+        float: left;
+        height: 350px;
+        /*border: 1px solid;*/
+        /*border-right: 1px solid;*/
+        padding: 50px 50px 0 50px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="main">
+      <div class="left">
+        <pre>
+          //核心算法
+          function memorandum(n,c){
+              if(n&lt;c){
+                arr[n-1][c-1] = 0;
+              }
+
+              if(n === 1||n===c){
+                arr[n-1][c-1] = 1;
+              }
+
+              if(c===1){
+                arr[n-1][c-1] = n;
+              }
+
+              if(arr[n-1][c-1]&lt;0){
+                var val = memorandum(n-1,c-1)+memorandum(n-1,c);
+                arr[n-1][c-1] = val;
+              }
+
+              return arr[n-1][c-1];
+          }
+        </pre>
+      </div>
+      <div class="center">
+        <label >n:&nbsp;&nbsp;</label><input id='n' type='number'/><br><br><br>
+        <label >c:&nbsp;&nbsp;</label><input id='c' type='number'/><br><br>
+        <input onclick="caculate()" type="button" name="计算" value="计算"/><br><br><br>
+        <label >result:</label><input id='result' type='number'/>
+
+      </div>
+      <div class="right">
+        <table id='table' >
+
+        </table>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      var arr;
+      // var result = 0;
+
+      //初始化备忘录数组
+      function init(n,c){
+        arr = new Array(n)
+        for(var i = 0 ;i<arr.length;i++){
+          arr[i]=new Array(c);
+          for(var j = 0;j<arr[i].length;j++){
+            arr[i][j] = -1;
+          }
+        }
+      }
+
+        //核心算法
+        function memorandum(n,c){
+            if(n<c){
+              arr[n-1][c-1] = 0;
+            }
+
+            if(n === 1||n===c){
+              arr[n-1][c-1] = 1;
+            }
+
+            if(c===1){
+              arr[n-1][c-1] = n;
+            }
+
+            if(arr[n-1][c-1]<0){
+              var val = memorandum(n-1,c-1)+memorandum(n-1,c);
+              arr[n-1][c-1] = val;
+            }
+
+            return arr[n-1][c-1];
+        }
+
+        function caculate(){
+          var n = document.getElementById('n');
+          var c = document.getElementById('c');
+
+          init(Number(n.value),Number(c.value));
+          var value = memorandum(Number(n.value),Number(c.value));
+
+          var string = "";
+
+          //拼表格字符串
+          for(var i = 0 ;i<arr.length;i++){
+             string += "<tr>"
+            for(var j = 0;j<arr[i].length;j++){
+              string += "<th>" +arr[i][j] + "</th>";
+            }
+            string += "</tr>"
+          }
+
+          var result = document.getElementById('result');
+          result.value = value;
+
+          var table = document.getElementById('table');
+          table.innerHTML = string;
+
+        }
+    </script>
+  </body>
+</html>
