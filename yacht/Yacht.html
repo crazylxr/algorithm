@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <style media="screen">
+      img{
+        width: 450px;
+        height: 400px;
+        margin-left: 50px;
+      }
+    </style>
+  </head>
+  <body>
+      <div class="">
+        <img src="./demo.png" alt="实例图片">
+        <pre>
+          第一步，根据图来建立权值矩阵：
+              int[][] W = {
+           {  0,   1,   4,  -1,  -1,  -1 },
+           {  1,   0,   2,   7,    5,  -1 },
+           {  4,   2,   0,  -1,    1,  -1 },
+           { -1,  7,  -1,   0,    3,    2 },
+           { -1,  5,    1,   3,   0,    6 },
+           { -1, -1,  -1,   2,   6,    0 } };(-1表示两边不相邻,权值无限大)
+          例如：W[0][2]=4 表示点V0到点V2的权值为4
+          W[0][3]=-1表示点V0与V3不相邻，所以权值无限大。
+          第二步：对V0标号；V0到其它点的路径得到 distance: {0,1,4,-1,-1,-1};
+                找到V0到各点中权值最小的那个点（标号的点除外,-1代表无限大），故得到1即对应的下标1，得到V1；
+                对V1标号，然后更改V0通过V1到其它点的路径得到 distance: { 0, 1, 3, 8, 6, -1};
+          第三步：找到distance中权值最小的那个点，（标号的点除外）得到V2,对V2标号，
+                然后更改V0通过V1->V2到其它点的路径得到 distance: { 0, 1, 3, 8, 4, -1};
+          第四步：找到distance中权值最小的那个点，（标号的点除外）得到V4,对V4标号，
+                然后更改V0通过V1->V2到其它点的路径得到 distance: { 0, 1, 3, 7, 4, 10};
+          第四步：找到distance中权值最小的那个点，（标号的点除外）得到V3,对V3标号，
+                然后更改V0通过V1->V2到其它点的路径得到 distance: { 0, 1, 3, 7, 4, 9};
+          最后只剩下V5没有被标号，就找到V5了。结束！
+        </pre>
+
+      </div>
+      <script type="text/javascript">
+
+       const MAX = 1000;
+        var arr1 = [
+          [ 0, 1, 4,MAX,MAX,MAX],
+          [ 1, 0, 2, 7, 5,MAX],
+          [ 4, 2, 0,MAX, 1,MAX],
+          [MAX,7,MAX, 0, 3, 2],
+          [MAX, 5, 1, 3, 0, 6],
+          [MAX,MAX,MAX, 2, 6, 0]
+        ];
+
+        var isMarked = [0,0,0,0,0,0]; //1表示访问过  0表示未访问过
+        var distance = [0,1,4,MAX,MAX,MAX];
+        var sum = 0;
+
+        /*
+         *@description:更新distance数组
+         *思路：首先将最小元素赋值为已标记过的
+         *     然后遍历邻居，如果最小距离（sum）+ 这个点到邻居的值 小于 distance[i] 就更新distance[i]的值
+         */
+        function updateDistance(minIndex){
+          isMarked[minIndex] = 1 ;
+
+          for(var i = 0 ;i<arr1.length; i++){
+            if(isMarked[i] == 1){
+              continue;
+            }
+
+            if(distance[i]>=sum+arr1[minIndex][i]){
+              distance[i] = sum+arr1[minIndex][i];
+            }
+          }
+        }
+
+        /*
+         *@description:在distance数组中除开已经标记过的，找到最小的元素的下标
+         *思路：如果被标记过的即isMarked[variable] == 1，直接continue,
+         *     如果遇到一个未被标记过的，把第一个未被标记的这个元素当做最小的元素，
+         *     其中用了一个变量isHasMin来标记是否已经有最小元素，
+         *     并把最小元素的保存在全局变量sum中。
+         */
+        function findMinWeight(){
+          var isHasMin = false;  //是否已经有最小元素
+          var minIndex = 0;  //最小元素的index
+          var min = distance[0]; //最小元素的值
+
+          for (var variable = minIndex ;variable<distance.length; variable++) {
+            if(isMarked[variable]==1){
+              continue;
+            }else if(isMarked[variable] == 0 && !isHasMin){
+              minIndex = variable ;
+              min = distance[minIndex];
+              isHasMin = true;
+            }
+
+            if (min > distance[variable] && distance[variable] > 0  ) {
+              min = distance[variable];
+              minIndex = variable;
+            }
+          }
+
+            sum = min;
+          return minIndex;
+        }
+
+        let minIndex = 0;
+        for(let i = 0 ;i<arr1.length;i++){
+          console.group("第"+i+"组信息");
+           minIndex = findMinWeight(minIndex);
+
+          console.log("minIndex:",minIndex);
+          updateDistance(minIndex);
+          console.log("sum",sum);
+
+          for(let i = 0;i<distance.length;i++){
+            console.log("distance:",distance[i]);
+          }
+          console.groupEnd();
+        }
+
+      </script>
+  </body>
+</html>
