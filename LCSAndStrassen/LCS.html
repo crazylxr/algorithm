@@ -3,41 +3,88 @@
   <head>
     <meta charset="utf-8">
     <title></title>
+    <style media="screen">
+      table{
+        margin: 0 auto;
+      }
+      td{
+        width: 50px;
+        height: 50px;
+        text-align: center;
+      }
+    </style>
   </head>
   <body>
+    <div class="input">
+      <label>字符串1：</label><input id="string1" type="text" placeholder="demo:abcdef"><br><br>
+      <label>字符串2：</label><input id="string2" type="text" placeholder="demo:cbcdjk"><br>
+      <input class='button' onclick='show()' type="button" name=""  value="点我演示">
+    </div>
+
+    <div class="">
+
+      <table id='table' border="1">
+
+      </table>
+    </div>
     <script type="text/javascript">
-      var x = ["", "A", "B", "C", "B", "D", "A", "B"];
-      var y = ["", "B", "D", "C", "A", "B", "A"];
-      
-      var b = getLength(x,y);
-      Display(b, x, x.length-1, y.length-1);
+      // var x = ["", "A", "B", "C", "B", "D", "A", "B"];
+      // var y = ["", "B", "D", "C", "A", "B", "A"];
+      var x ;
+      var y ;
+      var tableString = "";
+      function show(){
+        tableString = "";
+         x = document.getElementById('string1').value.split("");
+        x.splice(0,0,"");
+         y = document.getElementById('string2').value.split("");
+        y.splice(0,0,"");
+
+        var b = getLength(x,y);
+        var ele = document.getElementById('table').innerHTML = tableString;
+        Display(b, x, x.length-1, y.length-1);
+      }
+
 
       function getLength(x,y){
         var b = new Array(x.length);
         for(var i = 0 ;i<b.length; i++){
           b[i] = new Array(y.length);
+
         }
 
         var c = new Array(x.length);
         for(var i = 0;i<c.length;i++){
           c[i] = new Array(y.length);
+          for(var j = 0;j<c[i].length;j++){
+            c[i][j] = 0;
+          }
         }
 
-        for(var i = 1 ;i <x.length; i++){
-          for(var j = 1 ;j<y.length;j++){
-
-            //第一个性质
-            if(x[i] == y[j]){
+        for(var i = 0 ;i <x.length; i++){
+          tableString += "<tr>" ;
+          for(var j = 0 ;j<y.length;j++){
+            var str = i+"_"+j;
+            if(i == 0){
+              tableString += "<td>" +y[j]+"</td>";
+            }else if (j==0) {
+              tableString += "<td>" +x[i]+"</td>";
+            }else if(x[i] == y[j]){//第一个性质
               c[i][j] = c[i-1][j-1] + 1;
               b[i][j] = 1;
+              tableString += "<td id='"+str+"''>" +c[i][j]+"</td>";
             }else if (c[i-1][j]>=c[i][j-1]) {
               c[i][j] = c[i-1][j];
               b[i][j] = 0;
+              tableString += "<td id='"+str+"''>" +c[i][j]+"</td>";
             }else{
               c[i][j] = c[i][j-1];
               b[i][j] = -1;
+              tableString += "<td id='"+str+"''>" +c[i][j]+"</td>";
             }
           }
+
+          tableString += "</tr>" ;
         }
 
         return b;
@@ -49,11 +96,17 @@
 
         if(b[i][j] == 1){
             Display(b, x, i-1, j-1);
+            var ele = document.getElementById(i+'_'+j);
+            ele.style.backgroundColor="red";
             console.log(x[i] + " ");
         }else if(b[i][j] == 0){
             Display(b, x, i-1, j);
+            var ele = document.getElementById(i+'_'+j);
+            ele.style.backgroundColor="blue";
         }else if(b[i][j] == -1){
             Display(b, x, i, j-1);
+            var ele = document.getElementById(i+'_'+j);
+            ele.style.backgroundColor="green";
         }
       }
     </script>

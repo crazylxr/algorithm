@@ -3,31 +3,56 @@
   <head>
     <meta charset="utf-8">
     <title></title>
+    <style media="screen">
+      table{
+        margin: 0 auto;
+      }
+      td{
+        width: 100px;
+        height: 40px;
+      }
+      /*.button{
+        background-color: #436EEE;
+        color: #fff;
+      }*/
+    </style>
   </head>
   <body>
+    <div class="input">
+      <label>向量串：</label><input id="values" type="text" placeholder="demo:10,20,30,40">
+      <input class='button' onclick='show()' type="button" name=""  value="点我演示">
+    </div>
+    <div class="table">
+      <table id='table' border="1">
+
+      </table>
+    </div>
     <script type="text/javascript">
-      var p = [30,35,15,5,10,80,25,65,40,20];
+      var temp = new Array();
+      var tableString = "";
+      var p ;
+      // var p = [30 ,35, 15,5, 10, 20, 25];
 
-      var m = creatTwoDimensionalArray(p.length,p.length);
-      var s = creatTwoDimensionalArray(p.length,p.length);
+      var m ;
+      var s ;
 
-      matrixChain(m,s,p);
+      var i = 0;
+      var timer ;
+
+      function show(){
+
+        initTable();
+        m = creatTwoDimensionalArray(p.length,p.length);
+        s = creatTwoDimensionalArray(p.length,p.length);
+
+        matrixChain(m,s,p);
+
+        timer = setInterval(function(){
+          fillTable(i++);
+        },300);
+      }
 
 
-
-    //   for(let i=1;i<m.length;i++){
-    //      for(let j=1;j<m.length;j++){
-    //          if(i>j)
-    //          {
-    //            console.log("------");
-    //          }
-    //          else
-    //          {
-    //             console.log(m[i][j]+"\t");
-    //          }
-    //      }
-    //   console.log();
-    //  }
 
       /*
        *@param m 最优值，一个二维数组
@@ -37,8 +62,9 @@
       function matrixChain(m,s,p){
         let n = p.length - 1 ; //n为矩阵的个数,即矩阵链的长度
 
-        for(let i = 0;i<=n;i++){
+        for(let i = 1;i<=n;i++){
           m[i][i] = 0; //表示矩阵个数为1，不用相乘，最优值就为0
+          temp.push(i+"_"+i);
         }
 
         for(let r = 2 ; r <= n; r++){//r表示矩阵链的长度,从2开始递增
@@ -61,9 +87,51 @@
               }
             }
 
-            console.log(m[i][j]+"---"+s[i][j]+"---"+r);
+              temp.push(i+"_"+j);
+
+            console.log("i:"+i+"  j:"+j+"   "+m[i][j]+"---"+s[i][j]+"---"+r);
           }
         }
+      }
+
+      function fillTable(i){
+        if(i == temp.length-1){
+          clearInterval(timer);
+        }
+
+            var idValue = temp[i];
+            var values = idValue.split("_");
+            var ele = document.getElementById(idValue);
+            ele.style.color="#fff";
+            ele.style.backgroundColor="#436EEE";
+            ele.innerHTML = "m["+values[0]+","+values[1]+"]="+m[values[0]][values[1]];
+      }
+
+      function initTable(){
+        tableString="";
+        var element = document.getElementById('values');
+        var values = element.value.replace(/\s/g, "").split(',');
+        p = values;
+
+        for(var i = 0 ;i<p.length;i++){
+          tableString += "<tr>";
+          for (var j = 0; j < p.length; j++) {
+            var idValue = i+"_"+j;
+            if(i == 0){
+              tableString += "<td id='"+idValue+"'>"+j+"</td>";
+            }else if(j==0){
+              tableString += "<td id='"+idValue+"'>"+i+"</td>";
+            }else{
+                tableString += "<td id='"+idValue+"'></td>";
+            }
+          }
+          tableString += "<tr>";
+        }
+
+        var ele = document.getElementById('table');
+        ele.innerHTML = tableString;
+
+
       }
 
       function creatTwoDimensionalArray(m,n){
