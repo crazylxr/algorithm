@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <script type="text/javascript">
+      var x = ["", "A", "B", "C", "B", "D", "A", "B"];
+      var y = ["", "B", "D", "C", "A", "B", "A"];
+      
+      var b = getLength(x,y);
+      Display(b, x, x.length-1, y.length-1);
+
+      function getLength(x,y){
+        var b = new Array(x.length);
+        for(var i = 0 ;i<b.length; i++){
+          b[i] = new Array(y.length);
+        }
+
+        var c = new Array(x.length);
+        for(var i = 0;i<c.length;i++){
+          c[i] = new Array(y.length);
+        }
+
+        for(var i = 1 ;i <x.length; i++){
+          for(var j = 1 ;j<y.length;j++){
+
+            //第一个性质
+            if(x[i] == y[j]){
+              c[i][j] = c[i-1][j-1] + 1;
+              b[i][j] = 1;
+            }else if (c[i-1][j]>=c[i][j-1]) {
+              c[i][j] = c[i-1][j];
+              b[i][j] = 0;
+            }else{
+              c[i][j] = c[i][j-1];
+              b[i][j] = -1;
+            }
+          }
+        }
+
+        return b;
+      }
+
+      function Display(b,x,i,j){
+        if(i == 0 || j == 0)
+            return;
+
+        if(b[i][j] == 1){
+            Display(b, x, i-1, j-1);
+            console.log(x[i] + " ");
+        }else if(b[i][j] == 0){
+            Display(b, x, i-1, j);
+        }else if(b[i][j] == -1){
+            Display(b, x, i, j-1);
+        }
+      }
+    </script>
+  </body>
+</html>

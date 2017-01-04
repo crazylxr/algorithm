@@ -25,11 +25,11 @@
     <script>
         var c = document.getElementById("myCanvas");
         var ctx = c.getContext("2d");
-        var one = Math.PI/360;//弧度制的一度
+        var one = Math.PI/180;//弧度制的一度
         var width = 500;
         var height = 650;
         var length = 250;
-        var du = 60*one;
+        var du = 45*one;
         ctx.beginPath();
         ctx.moveTo(width/2, height);
         ctx.lineTo(width/2, height-length);
@@ -58,7 +58,7 @@
           ctx.lineTo(left_end_x,height-left_end_y);
 
           draw(right_begin_x,right_begin_y,right_end_x,right_end_y,x+du);
-          draw(left_begin_x,left_begin_y,left_end_x,left_end_y,x-2*du);
+          draw(left_begin_x,left_begin_y,left_end_x,left_end_y,x-du);
         }
 
         draw(width/2, 0,width/2, length,du);

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <script type="text/javascript">
+      var p = [30,35,15,5,10,80,25,65,40,20];
+
+      var m = creatTwoDimensionalArray(p.length,p.length);
+      var s = creatTwoDimensionalArray(p.length,p.length);
+
+      matrixChain(m,s,p);
+
+
+
+    //   for(let i=1;i<m.length;i++){
+    //      for(let j=1;j<m.length;j++){
+    //          if(i>j)
+    //          {
+    //            console.log("------");
+    //          }
+    //          else
+    //          {
+    //             console.log(m[i][j]+"\t");
+    //          }
+    //      }
+    //   console.log();
+    //  }
+
+      /*
+       *@param m 最优值，一个二维数组
+       *@param s 断开的索引  一维数组
+       *@param p 矩阵 一维数组
+       */
+      function matrixChain(m,s,p){
+        let n = p.length - 1 ; //n为矩阵的个数,即矩阵链的长度
+
+        for(let i = 0;i<=n;i++){
+          m[i][i] = 0; //表示矩阵个数为1，不用相乘，最优值就为0
+        }
+
+        for(let r = 2 ; r <= n; r++){//r表示矩阵链的长度,从2开始递增
+          for(let i =1 ;i <= n-r+1 ; i++){
+            //从第i个矩阵Ai开始，长度为r，则矩阵段为(Ai~Aj)
+            var j = i+r-1;//当前矩阵段(Ai~Aj)的起始为Ai,尾为Aj
+            //求(Ai~Aj)中最小的,其实k应该从i开始，但先记录第一个值，k从i+1开始，这样也可以。
+            //例如对(A2~A4),则i=2,j=4,下面一行的m[2][4]=m[3][4]+p[1]*p[2]*p[4],即A2(A3A4)
+            m[i][j] = m[i+1][j] + p[i-1]*p[i]*p[j];
+            s[i][j] = i; //记录断开点的索引
+
+            //循环求出(Ai~Aj)中最小数乘次数
+            for(let k = i+1;k<j;k++){
+              //将矩阵段(Ai~Aj)分成左右2部分(左m[i][k],右m[k+1][j]), //再加上左右2部分最后相乘的次数(p[i-1] *p[k]*p[j])
+              var t = m[i][k] + m[k+1][j] + p[i-1] * p[k] * p[j];
+
+              if(t < m[i][j]){
+                m[i][j] = t;
+                s[i][j] = k; //保存最小的,即最优的结果
+              }
+            }
+
+            console.log(m[i][j]+"---"+s[i][j]+"---"+r);
+          }
+        }
+      }
+
+      function creatTwoDimensionalArray(m,n){
+        var arr = new Array(Number(m));
+        for(var i = 0 ;i<Number(m);i++){
+          arr[i] = new Array(Number(n));
+        }
+        return arr;
+      }
+    </script>
+  </body>
+</html>
