@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>最长回文子序列</title>
+  </head>
+  <body>
+    <script type="text/javascript">
+      var demo = "ACGTGTCAAAATCG";
+      var s = demo.split("");
+      var c = creatTwoDimensionalArray(s.length,s.length);
+      var b = creatTwoDimensionalArray(s.length,s.length);
+
+      for(var i = 0;i<s.length;i++){
+        c[i][i] = 1;
+      }
+
+      findLPS(s, 0, s.length - 1);
+  		console.log(c[0][s.length - 1]);
+  		printLPS(s, 0, s.length - 1);
+      /**
+    	 *
+    	 * @description 找出S(p, q)之间的最大回文序列
+    	 * @author chenyubo
+    	 * @created 2017年1月3日 下午7:39:13
+    	 * @param s 待寻找的字符数组
+    	 * @param p 开始下标
+    	 * @param q 结束下标
+    	 * @return S(p, q)之间的最大回文序列的长度
+    	 */
+      function findLPS(s,p,q){
+        // 1.当Si == Sj ,这里要考虑当i + 1 == j的情况，若i + 1 == j, c[i,j] = 2;否则c[i, j] = c[i + 1, j - 1] + 2
+        // 2.当Si != Sj,c[i, j] = max{c[i + 1, j], c[i, j - 1]};
+
+        // 一个元素即为1
+            if (p == q) {
+          			return 1;
+          		}
+
+          		if (c[p][q] > 1) {
+          			return c[p][q];
+          		}
+
+          		// 如果首尾相同
+          		if (s[p] == s[q]) {
+          			if (p + 1 == q) // 只有2个字符,回文子序列长度为2
+          				c[p][q] = 2;
+          			else // 大于2个字符
+          				c[p][q] = findLPS(s, p + 1, q - 1) + 2;
+          			b[p][q] = 2;
+          		} else { // 首尾不相同,回文序列的长度c[p][q]为max{findLPS(s, p + 1, q), findLPS(s, p, q - 1)}
+          			var m1 = findLPS(s, p + 1, q);
+          			var m2 = findLPS(s, p, q - 1);
+          			if (m1 > m2) {
+          				c[p][q] = m1;
+          				b[p][q] = 1;
+          			} else {
+          				c[p][q] = m2;
+          				b[p][q] = 3;
+          			}
+          		}
+          		return c[p][q];
+      }
+
+      /**
+    	 *
+    	 * @description 打印最长的回文子序列
+    	 * @author chenyubo
+    	 * @created 2017年1月3日 下午7:43:03
+    	 * @param s 待寻找的字符数组
+    	 * @param p 开始下标
+    	 * @param q 结束下标
+    	 */
+      function printLPS(s,p,q){
+        if (p == q) { // 只有1个字符
+    			// System.out.print(s[p]);
+          console.log(s[p]);
+    		}else {
+    			if (b[p][q] == 2) { // 如果是2表示前后相等对称,打印
+    				if (p + 1 == q) { // 2个字符
+    				console.log(s[p] + "" + s[p]);
+    				} else { // 大于2个字符
+    					console.log(s[p]);
+    					printLPS(s, p + 1, q - 1); // 打印中间的字符
+    				  console.log(s[p]);
+    				}
+    			} else if (b[p][q] == 1) { // 如果是1,开始下标右移一位继续递归
+    				printLPS(s, p + 1, q);
+    			} else {
+    				printLPS(s, p, q - 1); // 如果是3,结束下标左移一位继续递归
+    			}
+    		}
+      }
+
+    function creatTwoDimensionalArray(m,n){
+      var arr = new Array(Number(m));
+      for(var i = 0 ;i<Number(m);i++){
+        arr[i] = new Array(Number(n));
+      }
+      return arr;
+    }
+    </script>
+  </body>
+</html>

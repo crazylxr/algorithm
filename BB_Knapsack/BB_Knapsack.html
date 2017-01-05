@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>背包问题</title>
+</head>
+
+<body>
+    <script type="text/javascript">
+        let weight = [4, 7, 5, 3];
+        let value = [40, 42, 25, 12];
+        const W = 10;
+        let n = 3;
+        let c_weight = 0; //当前背包重量
+        let c_value = 0; //当前背包价值
+        let bestv = 0; //最优的背包价值
+        let heap = new Array();
+
+        console.log(knapsack());
+        /*
+         *@description 求子树的最大上届ub=v+(W-c_weight)(Vi+1/Wi+1)
+         */
+        function maxBound(t) {
+            let left = W - c_weight;
+            let bound = c_value;
+
+            while (t < n && weight[t] <= left) {
+                left -= weight[t];
+                bound += value[t];
+                t++;
+            }
+
+            if (t < n) {
+                bound += (value[t] / weight[t]) * left; //装填剩余容量装满背包
+            }
+            return bound;
+        }
+
+        // 将一个新的活结点插入到子集树和最大堆heap中
+        function addLiveNode(upper, cvalue, cweight, level) {
+            let node = new Object();
+            node.upbound = upper;
+            node.value = cvalue;
+            node.weight = cweight;
+            node.level = level;
+            if (level <= n) {
+                heap.push(node);
+            }
+        }
+
+        // 利用分支界限法，返回最大价值bestv
+        function knapsack() {
+            let i = 0;
+            let upbound = maxBound(i); //调用maxBound求出价值上界，bestv为最优值
+            while (true) { // 非叶子结点
+                let wt = c_weight + weight[i];
+                if (wt <= W) { //左儿子结点为可行结点
+                    if (c_value + value[i] > bestv) {
+                        bestv = c_value + value[i];
+                        addLiveNode(upbound, c_value + value[i], c_weight + weight[i], i + 1);
+                    }
+                }
+
+                //右子树可能含有最优解
+                upbound = maxBound(i + 1);
+                if (upbound >= bestv) {
+                    addLiveNode(upbound, c_value, c_weight, i + 1);
+                }
+                if (heap.length == 0) {
+                    return bestv;
+                }
+
+                let node = heap.pop();
+                c_weight = node.weight;
+                c_value = node.value;
+                upbound = node.upbound;
+                i = node.level;
+
+            }
+        }
+    </script>
+</body>
+
+</html>
