@@ -20,7 +20,7 @@
 
 ## 字符串<a id="sec-2-2"></a>
 
--   [02-{字符串}-替换空格](https://github.com/crazylxr/algorithm/blob/master/coding-interviews/02-%255B%25E5%25AD%2597%25E7%25AC%25A6%25E4%25B8%25B2%255D-%25E6%259B%25BF%25E6%258D%25A2%25E7%25A9%25BA%25E6%25A0%25BC.org)
+-   [02-{字符串}-替换空格](https://github.com/crazylxr/algorithm/blob/master/coding-interviews/02-%5B%E5%AD%97%E7%AC%A6%E4%B8%B2%5D-%E6%9B%BF%E6%8D%A2%E7%A9%BA%E6%A0%BC.org)
 
 ## 链表<a id="sec-2-3"></a>
 
